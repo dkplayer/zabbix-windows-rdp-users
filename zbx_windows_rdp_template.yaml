@@ -1,0 +1,61 @@
+zabbix_export:
+  version: '5.4'
+  date: '2021-12-21T09:38:18Z'
+  groups:
+    -
+      uuid: 7df96b18c230490a9a0a9e2307226338
+      name: Templates
+  templates:
+    -
+      uuid: d6d88a7e91e649a59825a04299287151
+      template: 'Template RDP User sessions'
+      name: 'Template RDP User sessions'
+      groups:
+        -
+          name: Templates
+      items:
+        -
+          uuid: 5f7ee37d4ab541138238b3166d906787
+          name: 'RDP Open Sessions'
+          key: rdps
+          tags:
+            -
+              tag: Application
+              value: Security
+          triggers:
+            -
+              uuid: 0598b2cf3f4a44a894999de4eccbe115
+              expression: 'last(/Template RDP User sessions/rdps)>0'
+              name: 'Open Sessions on {HOST.NAME}'
+              opdata: 'Users: {ITEM.LASTVALUE1}'
+              priority: INFO
+        -
+          uuid: 7e507bc13ee54124ab7dd9497738ddfd
+          name: 'RDP User Sessions'
+          key: rdp_users
+          trends: '0'
+          value_type: TEXT
+          tags:
+            -
+              tag: Application
+              value: Security
+          triggers:
+            -
+              uuid: 5992e489b8b145b0a921b94ac67d003f
+              expression: 'last(/Template RDP User sessions/rdp_users,#1)<>""'
+              name: 'Users on {HOST.NAME}'
+              opdata: 'Users: {ITEM.LASTVALUE1}'
+              priority: INFO
+  graphs:
+    -
+      uuid: 9f890c1d1b094e20b2d7e4c152c95f5b
+      name: 'RDP Users'
+      show_triggers: 'NO'
+      graph_items:
+        -
+          sortorder: '1'
+          drawtype: GRADIENT_LINE
+          color: 199C0D
+          item:
+            host: 'Template RDP User sessions'
+            key: rdps
